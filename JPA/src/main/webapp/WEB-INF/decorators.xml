@@ -1,0 +1,11 @@
+<sitemesh>
+
+	<mapping path="/*" decorator="/decorators/main.jsp" />
+
+	<mapping path="/login" exclude="true" />
+
+	<mapping path="/logout" exclude="true" />
+
+	<mapping path="/images/*" exclude="true" />
+
+</sitemesh>
