@@ -1,11 +1,7 @@
-<sitemesh>
+<?xml version="1.0" encoding="UTF-8"?>
 
-	<mapping path="/*" decorator="/decorators/main.jsp" />
-
-	<mapping path="/login" exclude="true" />
-
-	<mapping path="/logout" exclude="true" />
-
-	<mapping path="/images/*" exclude="true" />
-
-</sitemesh>
+<decorators>
+	<decorator name="main" page="/main.jsp">
+		<pattern>/*</pattern>
+	</decorator>
+</decorators>

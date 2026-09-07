@@ -3,26 +3,27 @@
 
 <!DOCTYPE html>
 <html lang="vi">
+
 <head>
+
 <meta charset="UTF-8">
+
 <title>Thêm sản phẩm</title>
 
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<!-- Bootstrap 5 -->
+<link
+	href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
+	rel="stylesheet">
+
+<link rel="stylesheet"
+	href="${pageContext.request.contextPath}/css/style.css">
+
 <style>
-* {
-	box-sizing: border-box;
-}
-
-body {
-	margin: 0;
-	font-family: Arial, sans-serif;
-	background: #f5f7fb;
-	color: #1f2937;
-}
-
 .container {
 	max-width: 900px;
 	margin: 40px auto;
-	padding: 0 20px;
 }
 
 .header {
@@ -35,12 +36,10 @@ body {
 .header h1 {
 	margin: 0;
 	font-size: 30px;
-	color: #111827;
 }
 
 .back {
 	text-decoration: none;
-	color: #667eea;
 	font-weight: 600;
 }
 
@@ -55,39 +54,6 @@ body {
 	margin-bottom: 20px;
 }
 
-label {
-	display: block;
-	margin-bottom: 8px;
-	font-weight: 600;
-	color: #374151;
-}
-
-input, textarea, select {
-	width: 100%;
-	padding: 11px 13px;
-	border: 1px solid #d1d5db;
-	border-radius: 8px;
-	font-size: 15px;
-	font-family: Arial, sans-serif;
-}
-
-input:focus, textarea:focus, select:focus {
-	outline: none;
-	border-color: #667eea;
-	box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.12);
-}
-
-textarea {
-	min-height: 130px;
-	resize: vertical;
-}
-
-.row {
-	display: grid;
-	grid-template-columns: 1fr 1fr;
-	gap: 20px;
-}
-
 .image-box {
 	border: 2px dashed #d1d5db;
 	border-radius: 10px;
@@ -98,7 +64,6 @@ textarea {
 
 .image-box input {
 	border: none;
-	padding: 5px;
 	background: transparent;
 }
 
@@ -116,43 +81,11 @@ textarea {
 	margin-top: 25px;
 }
 
-.btn {
-	display: inline-block;
-	padding: 11px 22px;
-	border-radius: 8px;
-	text-decoration: none;
-	border: none;
-	cursor: pointer;
-	font-size: 15px;
-	font-weight: 600;
-}
-
-.btn-primary {
-	background: #667eea;
-	color: white;
-}
-
-.btn-primary:hover {
-	background: #5568d9;
-}
-
-.btn-secondary {
-	background: #e5e7eb;
-	color: #374151;
-}
-
-.btn-secondary:hover {
-	background: #d1d5db;
-}
-
 .required {
 	color: red;
 }
 
 @media ( max-width : 700px) {
-	.row {
-		grid-template-columns: 1fr;
-	}
 	.container {
 		margin: 20px auto;
 	}
@@ -166,101 +99,173 @@ textarea {
 	}
 }
 </style>
+
 </head>
 
 <body>
 
 	<div class="container">
 
+		<!-- HEADER -->
+
 		<div class="header">
+
 			<h1>Thêm sản phẩm</h1>
 
 			<a href="${pageContext.request.contextPath}/admin/products"
 				class="back"> ← Quay lại danh sách </a>
+
 		</div>
+
 
 		<div class="card">
 
-			<!-- Hiển thị lỗi nếu thêm sản phẩm thất bại -->
+			<!-- ERROR FROM CONTROLLER -->
+
 			<c:if test="${not empty error}">
-				<div class="error">${error}</div>
+
+				<div class="alert alert-danger" role="alert">${error}</div>
+
 			</c:if>
 
-			<!--
-            QUAN TRỌNG:
-            Controller nhận POST tại /admin/product/insert
-            và upload ảnh nên phải có enctype multipart/form-data
-        -->
+
+			<!-- =========================
+             FORM THÊM SẢN PHẨM
+             ========================= -->
+
 			<form
 				action="${pageContext.request.contextPath}/admin/product/insert"
-				method="post" enctype="multipart/form-data">
+				method="post" enctype="multipart/form-data" class="needs-validation"
+				novalidate>
 
-				<!-- Tên sản phẩm -->
+
+				<!-- TÊN SẢN PHẨM -->
+
 				<div class="form-group">
+
 					<label for="productName"> Tên sản phẩm <span
 						class="required">*</span>
+
 					</label> <input type="text" id="productName" name="productName"
-						placeholder="Nhập tên sản phẩm" required>
+						class="form-control" placeholder="Nhập tên sản phẩm"
+						maxlength="100" pattern=".{2,100}" required>
+
+					<div class="invalid-feedback">Tên sản phẩm phải từ 2 đến 100
+						ký tự.</div>
+
 				</div>
 
-				<!-- Mô tả -->
+
+				<!-- MÔ TẢ -->
+
 				<div class="form-group">
+
 					<label for="description"> Mô tả </label>
 
-					<textarea id="description" name="description"
-						placeholder="Nhập mô tả sản phẩm"></textarea>
+					<textarea id="description" name="description" class="form-control"
+						maxlength="1000" placeholder="Nhập mô tả sản phẩm"></textarea>
+
+					<div class="invalid-feedback">Mô tả không được vượt quá 1000
+						ký tự.</div>
+
 				</div>
 
-				<!-- Giá + Số lượng -->
+
+				<!-- GIÁ + SỐ LƯỢNG -->
+
 				<div class="row">
 
-					<div class="form-group">
-						<label for="price"> Giá <span class="required">*</span>
-						</label> <input type="number" id="price" name="price" step="0.01" min="0"
-							placeholder="Nhập giá" required>
+					<!-- GIÁ -->
+
+					<div class="col-md-6">
+
+						<div class="form-group">
+
+							<label for="price"> Giá <span class="required">*</span>
+
+							</label> <input type="number" id="price" name="price"
+								class="form-control" step="0.01" min="0" placeholder="Nhập giá"
+								required>
+
+							<div class="invalid-feedback">Giá phải lớn hơn hoặc bằng 0.
+
+							</div>
+
+						</div>
+
 					</div>
 
-					<div class="form-group">
-						<label for="quantity"> Số lượng <span class="required">*</span>
-						</label> <input type="number" id="quantity" name="quantity" min="0"
-							placeholder="Nhập số lượng" required>
+
+					<!-- SỐ LƯỢNG -->
+
+					<div class="col-md-6">
+
+						<div class="form-group">
+
+							<label for="quantity"> Số lượng <span class="required">*</span>
+
+							</label> <input type="number" id="quantity" name="quantity"
+								class="form-control" min="0" step="1"
+								placeholder="Nhập số lượng" required>
+
+							<div class="invalid-feedback">Số lượng phải là số nguyên
+								lớn hơn hoặc bằng 0.</div>
+
+						</div>
+
 					</div>
 
 				</div>
 
-				<!-- Category -->
+
+				<!-- CATEGORY -->
+
 				<div class="form-group">
+
 					<label for="cateId"> Danh mục <span class="required">*</span>
-					</label> <select id="cateId" name="cateId" required>
+
+					</label> <select id="cateId" name="cateId" class="form-select" required>
 
 						<option value="">-- Chọn danh mục --</option>
 
 						<c:forEach var="category" items="${listCategory}">
 
 							<option value="${category.cateId}">${category.cateName}
+
 							</option>
 
 						</c:forEach>
 
 					</select>
+
+					<div class="invalid-feedback">Vui lòng chọn danh mục.</div>
+
 				</div>
 
-				<!-- Hình ảnh -->
+
+				<!-- IMAGE -->
+
 				<div class="form-group">
 
 					<label for="image"> Hình ảnh </label>
 
 					<div class="image-box">
 
-						<input type="file" id="image" name="image" accept="image/*">
+						<input type="file" id="image" name="image" class="form-control"
+							accept="image/*">
 
-						<p>Chọn hình ảnh sản phẩm</p>
+						<p class="mt-2 mb-0">Chọn hình ảnh sản phẩm</p>
 
 					</div>
 
+					<div class="invalid-feedback">Vui lòng chọn file hình ảnh hợp
+						lệ.</div>
+
 				</div>
 
-				<!-- Buttons -->
+
+				<!-- BUTTONS -->
+
 				<div class="actions">
 
 					<button type="submit" class="btn btn-primary">+ Thêm sản
@@ -277,5 +282,41 @@ textarea {
 
 	</div>
 
+
+	<!-- =========================
+     BOOTSTRAP VALIDATION
+     ========================= -->
+
+	<script>
+
+    (() => {
+
+        'use strict';
+
+        const forms =
+            document.querySelectorAll('.needs-validation');
+
+        Array.from(forms).forEach(form => {
+
+            form.addEventListener('submit', event => {
+
+                if (!form.checkValidity()) {
+
+                    event.preventDefault();
+                    event.stopPropagation();
+
+                }
+
+                form.classList.add('was-validated');
+
+            }, false);
+
+        });
+
+    })();
+
+</script>
+
 </body>
+
 </html>

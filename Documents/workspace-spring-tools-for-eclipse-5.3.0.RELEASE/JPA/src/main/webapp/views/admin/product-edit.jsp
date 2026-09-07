@@ -4,14 +4,20 @@
 <%@ taglib prefix="c" uri="jakarta.tags.core"%>
 
 <!DOCTYPE html>
-
 <html lang="vi">
 
 <head>
 
 <meta charset="UTF-8">
 
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <title>Sửa sản phẩm</title>
+
+<!-- Bootstrap 5 -->
+<link
+	href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
+	rel="stylesheet">
 
 <link rel="stylesheet"
 	href="${pageContext.request.contextPath}/css/style.css">
@@ -35,19 +41,6 @@
 	margin-bottom: 8px;
 }
 
-.form-control {
-	width: 100%;
-	padding: 11px;
-	border: 1px solid #d1d5db;
-	border-radius: 7px;
-	font-size: 15px;
-}
-
-textarea.form-control {
-	min-height: 120px;
-	resize: vertical;
-}
-
 .current-image {
 	width: 180px;
 	height: 180px;
@@ -56,23 +49,8 @@ textarea.form-control {
 	border: 1px solid #ddd;
 }
 
-.btn {
-	display: inline-block;
-	padding: 10px 18px;
-	border-radius: 7px;
-	text-decoration: none;
-	border: none;
-	cursor: pointer;
-}
-
-.btn-primary {
-	background: #667eea;
-	color: white;
-}
-
-.btn-secondary {
-	background: #6b7280;
-	color: white;
+.required {
+	color: red;
 }
 
 .error {
@@ -90,14 +68,14 @@ textarea.form-control {
 
 	<div class="admin-layout">
 
-		<!-- SIDEBAR -->
+		<!-- =========================
+         SIDEBAR
+         ========================= -->
 
 		<aside class="sidebar">
 
 			<div class="sidebar-logo">
-
 				🛒 <span>Shopping MVC</span>
-
 			</div>
 
 			<div class="sidebar-menu">
@@ -115,6 +93,7 @@ textarea.form-control {
 
 				</a>
 
+
 				<div class="menu-title">HỆ THỐNG</div>
 
 				<a href="${pageContext.request.contextPath}/logout"
@@ -127,7 +106,9 @@ textarea.form-control {
 		</aside>
 
 
-		<!-- MAIN -->
+		<!-- =========================
+         MAIN
+         ========================= -->
 
 		<main class="main-area">
 
@@ -147,6 +128,8 @@ textarea.form-control {
 
 			<section class="content">
 
+				<!-- PAGE TITLE -->
+
 				<div class="page-title">
 
 					<div>
@@ -160,70 +143,126 @@ textarea.form-control {
 				</div>
 
 
+				<!-- =========================
+                 FORM BOX
+                 ========================= -->
+
 				<div class="form-box">
+
+					<!-- ERROR FROM CONTROLLER -->
 
 					<c:if test="${not empty error}">
 
-						<div class="error">${error}</div>
+						<div class="alert alert-danger" role="alert">${error}</div>
 
 					</c:if>
 
 
+					<!-- =========================
+                     UPDATE FORM
+                     ========================= -->
+
 					<form method="post"
 						action="${pageContext.request.contextPath}/admin/product/update"
-						enctype="multipart/form-data">
+						enctype="multipart/form-data" class="needs-validation" novalidate>
 
+
+						<!-- PRODUCT ID -->
 
 						<input type="hidden" name="productId" value="${product.productId}">
 
 
+						<!-- =========================
+                         TÊN SẢN PHẨM
+                         ========================= -->
+
 						<div class="form-group">
 
-							<label> Tên sản phẩm </label> <input type="text"
-								name="productName" class="form-control"
-								value="${product.productName}" required>
+							<label for="productName"> Tên sản phẩm <span
+								class="required">*</span>
+
+							</label> <input type="text" id="productName" name="productName"
+								class="form-control" value="${product.productName}"
+								maxlength="100" pattern=".{2,100}" required>
+
+							<div class="invalid-feedback">Tên sản phẩm phải từ 2 đến
+								100 ký tự.</div>
 
 						</div>
 
 
+						<!-- =========================
+                         MÔ TẢ
+                         ========================= -->
+
 						<div class="form-group">
 
-							<label> Mô tả </label>
+							<label for="description"> Mô tả </label>
 
-							<textarea name="description" class="form-control">${product.description}</textarea>
+							<textarea id="description" name="description"
+								class="form-control" maxlength="1000" rows="5">${product.description}</textarea>
+
+							<div class="invalid-feedback">Mô tả không được vượt quá
+								1000 ký tự.</div>
 
 						</div>
 
 
+						<!-- =========================
+                         GIÁ
+                         ========================= -->
+
 						<div class="form-group">
 
-							<label> Giá </label> <input type="number" name="price"
+							<label for="price"> Giá <span class="required">*</span>
+
+							</label> <input type="number" id="price" name="price"
 								class="form-control" value="${product.price}" step="0.01"
 								min="0" required>
 
+							<div class="invalid-feedback">Giá phải lớn hơn hoặc bằng 0.
+
+							</div>
+
 						</div>
 
 
+						<!-- =========================
+                         SỐ LƯỢNG
+                         ========================= -->
+
 						<div class="form-group">
 
-							<label> Số lượng </label> <input type="number" name="quantity"
+							<label for="quantity"> Số lượng <span class="required">*</span>
+
+							</label> <input type="number" id="quantity" name="quantity"
 								class="form-control" value="${product.quantity}" min="0"
-								required>
+								step="1" required>
+
+							<div class="invalid-feedback">Số lượng phải là số nguyên
+								lớn hơn hoặc bằng 0.</div>
 
 						</div>
 
 
+						<!-- =========================
+                         DANH MỤC
+                         ========================= -->
+
 						<div class="form-group">
 
-							<label> Danh mục </label> <select name="cateId"
-								class="form-control" required>
+							<label for="cateId"> Danh mục <span class="required">*</span>
+
+							</label> <select id="cateId" name="cateId" class="form-select" required>
+
+								<option value="">-- Chọn danh mục --</option>
 
 								<c:forEach var="c" items="${listCategory}">
 
 									<option value="${c.cateId}"
 										<c:if test="${c.cateId == product.category.cateId}">
-										selected
-									</c:if>>
+                                        selected
+                                    </c:if>>
 
 										${c.cateName}</option>
 
@@ -231,8 +270,14 @@ textarea.form-control {
 
 							</select>
 
+							<div class="invalid-feedback">Vui lòng chọn danh mục.</div>
+
 						</div>
 
+
+						<!-- =========================
+                         ẢNH HIỆN TẠI
+                         ========================= -->
 
 						<c:if test="${not empty product.image}">
 
@@ -247,22 +292,38 @@ textarea.form-control {
 						</c:if>
 
 
+						<!-- =========================
+                         CHỌN ẢNH MỚI
+                         ========================= -->
+
 						<div class="form-group">
 
-							<label> Chọn ảnh mới </label> <input type="file" name="image"
-								class="form-control" accept="image/*"> <small>
-								Nếu không chọn ảnh mới thì ảnh hiện tại được giữ nguyên. </small>
+							<label for="image"> Chọn ảnh mới </label> <input type="file"
+								id="image" name="image" class="form-control" accept="image/*">
+
+							<div class="form-text">Nếu không chọn ảnh mới thì ảnh hiện
+								tại được giữ nguyên.</div>
+
+							<div class="invalid-feedback">File được chọn phải là hình
+								ảnh.</div>
 
 						</div>
 
 
-						<button type="submit" class="btn btn-primary">💾 Cập nhật
+						<!-- =========================
+                         BUTTON
+                         ========================= -->
 
-						</button>
+						<div class="mt-4">
+
+							<button type="submit" class="btn btn-primary">💾 Cập
+								nhật</button>
 
 
-						<a href="${pageContext.request.contextPath}/admin/products"
-							class="btn btn-secondary"> Quay lại </a>
+							<a href="${pageContext.request.contextPath}/admin/products"
+								class="btn btn-secondary"> Quay lại </a>
+
+						</div>
 
 					</form>
 
@@ -273,6 +334,41 @@ textarea.form-control {
 		</main>
 
 	</div>
+
+
+	<!-- =========================
+     BOOTSTRAP VALIDATION
+     ========================= -->
+
+	<script>
+
+    (() => {
+
+        'use strict';
+
+        const forms =
+            document.querySelectorAll('.needs-validation');
+
+        Array.from(forms).forEach(form => {
+
+            form.addEventListener('submit', event => {
+
+                if (!form.checkValidity()) {
+
+                    event.preventDefault();
+                    event.stopPropagation();
+
+                }
+
+                form.classList.add('was-validated');
+
+            }, false);
+
+        });
+
+    })();
+
+</script>
 
 </body>
 

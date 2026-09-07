@@ -7,10 +7,14 @@
 <html lang="vi">
 
 <head>
-
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <title>Thông tin cá nhân</title>
+
+<link
+	href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
+	rel="stylesheet">
 
 <link rel="stylesheet"
 	href="${pageContext.request.contextPath}/css/style.css">
@@ -91,6 +95,10 @@
 	margin-bottom: 20px;
 	text-align: center;
 }
+
+.btn-block {
+	width: 100%;
+}
 </style>
 
 </head>
@@ -101,61 +109,40 @@
 
 		<div class="auth-box profile-box">
 
-			<!-- ================= HEADER ================= -->
-
 			<div class="auth-logo">
-
 				<div class="logo-icon">👤</div>
 
 				<h2>Thông tin cá nhân</h2>
 
 				<p>Quản lý thông tin tài khoản của bạn</p>
-
 			</div>
 
 
-			<!-- ================= THÔNG BÁO THÀNH CÔNG ================= -->
-
 			<c:if test="${not empty sessionScope.success}">
-
 				<div class="success-message">${sessionScope.success}</div>
 
 				<c:remove var="success" scope="session" />
-
 			</c:if>
 
-
-			<!-- ================= THÔNG BÁO THÀNH CÔNG REQUEST ================= -->
 
 			<c:if test="${not empty message}">
-
 				<div class="success-message">${message}</div>
-
 			</c:if>
 
-
-			<!-- ================= THÔNG BÁO LỖI ================= -->
 
 			<c:if test="${not empty error}">
-
 				<div class="error-message">${error}</div>
-
 			</c:if>
 
-
-			<!-- ================= PROFILE ================= -->
 
 			<form method="post"
 				action="${pageContext.request.contextPath}/profile"
-				enctype="multipart/form-data">
+				enctype="multipart/form-data" class="needs-validation" novalidate>
 
-
-				<!-- ================= AVATAR ================= -->
 
 				<div class="profile-avatar-area">
 
 					<c:choose>
-
 						<c:when test="${not empty user.avatar}">
 
 							<img id="avatarPreview" class="profile-avatar"
@@ -172,25 +159,25 @@
 								alt="Ảnh đại diện" style="display: none;">
 
 						</c:otherwise>
-
 					</c:choose>
 
 
 					<div class="avatar-upload">
 
 						<label for="avatar"> <strong>Chọn ảnh đại diện</strong>
-						</label> <input type="file" id="avatar" name="avatar"
+						</label> <input type="file" id="avatar" name="avatar" class="form-control"
 							accept=".jpg,.jpeg,.png,.gif,.webp">
 
 						<div class="avatar-note">JPG, JPEG, PNG, GIF, WEBP - tối đa
 							5MB</div>
 
+						<div class="invalid-feedback">Chỉ được chọn JPG, JPEG, PNG,
+							GIF hoặc WEBP và dung lượng không quá 5MB.</div>
+
 					</div>
 
 				</div>
 
-
-				<!-- ================= USERNAME ================= -->
 
 				<div class="form-group">
 
@@ -201,8 +188,6 @@
 				</div>
 
 
-				<!-- ================= EMAIL ================= -->
-
 				<div class="form-group">
 
 					<label for="email"> Email </label> <input type="email" id="email"
@@ -211,29 +196,32 @@
 				</div>
 
 
-				<!-- ================= HỌ TÊN ================= -->
-
 				<div class="form-group">
 
-					<label for="fullname"> Họ và tên </label> <input type="text"
-						id="fullname" name="fullname" class="form-control"
-						value="${user.fullname}" placeholder="Nhập họ và tên" required>
+					<label for="fullname"> Họ và tên <span class="required">*</span>
+					</label> <input type="text" id="fullname" name="fullname"
+						class="form-control" value="${user.fullname}"
+						placeholder="Nhập họ và tên" minlength="2" maxlength="100"
+						required>
+
+					<div class="invalid-feedback">Họ và tên phải từ 2 đến 100 ký
+						tự.</div>
 
 				</div>
 
 
-				<!-- ================= SỐ ĐIỆN THOẠI ================= -->
-
 				<div class="form-group">
 
-					<label for="phone"> Số điện thoại </label> <input type="text"
-						id="phone" name="phone" class="form-control" value="${user.phone}"
-						placeholder="Nhập số điện thoại">
+					<label for="phone"> Số điện thoại <span class="required">*</span>
+					</label> <input type="tel" id="phone" name="phone" class="form-control"
+						value="${user.phone}" placeholder="Nhập số điện thoại"
+						pattern="^(0|\+84)(3|5|7|8|9)[0-9]{8}$" required>
+
+					<div class="invalid-feedback">Số điện thoại không hợp lệ. Ví
+						dụ: 0912345678 hoặc +84912345678.</div>
 
 				</div>
 
-
-				<!-- ================= BUTTON ================= -->
 
 				<button type="submit" class="btn btn-primary btn-block">
 
@@ -241,8 +229,6 @@
 
 			</form>
 
-
-			<!-- ================= FOOTER ================= -->
 
 			<div class="auth-footer">
 
@@ -256,58 +242,203 @@
 	</div>
 
 
-	<!-- ================= PREVIEW ẢNH ================= -->
-
 	<script>
-		document.getElementById("avatar").addEventListener(
-				"change",
-				function() {
 
-					const file = this.files[0];
+document.addEventListener("DOMContentLoaded", function () {
 
-					if (!file) {
-						return;
-					}
+    const form = document.querySelector(".needs-validation");
 
-					// Kiểm tra dung lượng
-					if (file.size > 5 * 1024 * 1024) {
+    const avatarInput = document.getElementById("avatar");
 
-						alert("Ảnh không được vượt quá 5MB.");
+    const fullnameInput = document.getElementById("fullname");
 
-						this.value = "";
+    const phoneInput = document.getElementById("phone");
 
-						return;
-					}
+    const avatarPreview = document.getElementById("avatarPreview");
 
-					// Kiểm tra loại file
-					const allowedTypes = [ "image/jpeg", "image/png",
-							"image/gif", "image/webp" ];
+    const avatarDefault = document.getElementById("avatarDefault");
 
-					if (!allowedTypes.includes(file.type)) {
 
-						alert("Chỉ được chọn JPG, JPEG, PNG, GIF hoặc WEBP.");
+    /*
+     * VALIDATION AVATAR
+     */
 
-						this.value = "";
+    avatarInput.addEventListener("change", function () {
 
-						return;
-					}
+        const file = this.files[0];
 
-					// Preview
-					const preview = document.getElementById("avatarPreview");
+        if (!file) {
 
-					const defaultAvatar = document
-							.getElementById("avatarDefault");
+            this.classList.remove("is-invalid");
 
-					preview.src = URL.createObjectURL(file);
+            return;
+        }
 
-					preview.style.display = "block";
 
-					if (defaultAvatar) {
-						defaultAvatar.style.display = "none";
-					}
+        if (file.size > 5 * 1024 * 1024) {
 
-				});
-	</script>
+            this.classList.add("is-invalid");
+
+            alert("Ảnh không được vượt quá 5MB.");
+
+            this.value = "";
+
+            return;
+        }
+
+
+        const allowedTypes = [
+            "image/jpeg",
+            "image/png",
+            "image/gif",
+            "image/webp"
+        ];
+
+
+        if (!allowedTypes.includes(file.type)) {
+
+            this.classList.add("is-invalid");
+
+            alert(
+                "Chỉ được chọn JPG, JPEG, PNG, GIF hoặc WEBP."
+            );
+
+            this.value = "";
+
+            return;
+        }
+
+
+        this.classList.remove("is-invalid");
+
+
+        avatarPreview.src = URL.createObjectURL(file);
+
+        avatarPreview.style.display = "block";
+
+
+        if (avatarDefault) {
+
+            avatarDefault.style.display = "none";
+        }
+
+    });
+
+
+    /*
+     * VALIDATION HỌ TÊN
+     */
+
+    fullnameInput.addEventListener("input", function () {
+
+        const value = this.value.trim();
+
+
+        if (value.length < 2 || value.length > 100) {
+
+            this.setCustomValidity(
+                "Họ và tên phải từ 2 đến 100 ký tự."
+            );
+
+        } else {
+
+            this.setCustomValidity("");
+
+        }
+
+    });
+
+
+    /*
+     * VALIDATION SỐ ĐIỆN THOẠI
+     */
+
+    phoneInput.addEventListener("input", function () {
+
+        const value = this.value.trim();
+
+        const phoneRegex =
+            /^(0|\+84)(3|5|7|8|9)[0-9]{8}$/;
+
+
+        if (!phoneRegex.test(value)) {
+
+            this.setCustomValidity(
+                "Số điện thoại không hợp lệ."
+            );
+
+        } else {
+
+            this.setCustomValidity("");
+
+        }
+
+    });
+
+
+    /*
+     * SUBMIT FORM
+     */
+
+    form.addEventListener("submit", function (event) {
+
+        const file = avatarInput.files[0];
+
+
+        /*
+         * KIỂM TRA AVATAR
+         */
+
+        if (file) {
+
+            const allowedTypes = [
+                "image/jpeg",
+                "image/png",
+                "image/gif",
+                "image/webp"
+            ];
+
+
+            if (file.size > 5 * 1024 * 1024) {
+
+                event.preventDefault();
+
+                avatarInput.classList.add("is-invalid");
+
+            }
+
+
+            if (!allowedTypes.includes(file.type)) {
+
+                event.preventDefault();
+
+                avatarInput.classList.add("is-invalid");
+
+            }
+
+        }
+
+
+        /*
+         * KIỂM TRA FORM HTML5
+         */
+
+        if (!form.checkValidity()) {
+
+            event.preventDefault();
+
+            event.stopPropagation();
+
+        }
+
+
+        form.classList.add("was-validated");
+
+    });
+
+});
+
+</script>
 
 </body>
 

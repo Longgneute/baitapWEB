@@ -1,5 +1,4 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java"%>
-
 <%@ page import="vn.laptrinhJPA.entity.Category"%>
 
 <%
@@ -13,10 +12,64 @@ Category category = (Category) request.getAttribute("category");
 
 <meta charset="UTF-8">
 
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <title>Chỉnh sửa danh mục</title>
+
+<!-- Bootstrap 5 -->
+<link
+	href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
+	rel="stylesheet">
 
 <link rel="stylesheet"
 	href="${pageContext.request.contextPath}/css/style.css">
+
+<style>
+.form-card {
+	max-width: 800px;
+}
+
+.form-group {
+	margin-bottom: 20px;
+}
+
+.form-group label {
+	display: block;
+	font-weight: 600;
+	margin-bottom: 8px;
+}
+
+.preview-image {
+	width: 150px;
+	height: 150px;
+	object-fit: cover;
+	border-radius: 10px;
+	border: 1px solid #ddd;
+	margin-top: 10px;
+}
+
+.no-image {
+	width: 150px;
+	height: 150px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	background: #f3f4f6;
+	border-radius: 10px;
+	color: #6b7280;
+	text-align: center;
+}
+
+.form-hint {
+	display: block;
+	margin-top: 6px;
+	color: #6b7280;
+}
+
+.required {
+	color: red;
+}
+</style>
 
 </head>
 
@@ -24,15 +77,21 @@ Category category = (Category) request.getAttribute("category");
 
 	<div class="admin-layout">
 
+
+		<!-- ================= SIDEBAR ================= -->
+
 		<aside class="sidebar">
 
 			<div class="sidebar-logo">
+
 				🛒 <span>Shopping MVC</span>
+
 			</div>
 
 			<div class="sidebar-menu">
 
 				<div class="menu-title">QUẢN LÝ</div>
+
 
 				<a href="${pageContext.request.contextPath}/admin/home"
 					class="menu-item"> 📊 <span>Trang chủ</span>
@@ -45,7 +104,9 @@ Category category = (Category) request.getAttribute("category");
 
 				</a>
 
+
 				<div class="menu-title">HỆ THỐNG</div>
+
 
 				<a href="${pageContext.request.contextPath}/logout"
 					class="menu-item"> 🚪 <span>Đăng xuất</span>
@@ -57,7 +118,12 @@ Category category = (Category) request.getAttribute("category");
 		</aside>
 
 
+		<!-- ================= MAIN ================= -->
+
 		<main class="main-area">
+
+
+			<!-- TOPBAR -->
 
 			<header class="topbar">
 
@@ -66,7 +132,12 @@ Category category = (Category) request.getAttribute("category");
 			</header>
 
 
+			<!-- ================= CONTENT ================= -->
+
 			<section class="content">
+
+
+				<!-- PAGE TITLE -->
 
 				<div class="page-title">
 
@@ -78,17 +149,20 @@ Category category = (Category) request.getAttribute("category");
 
 					</div>
 
+
 					<a href="${pageContext.request.contextPath}/admin/categories"
 						class="btn btn-secondary"> ← Quay lại </a>
 
 				</div>
 
 
+				<!-- ================= ERROR ================= -->
+
 				<%
 				if (request.getAttribute("error") != null) {
 				%>
 
-				<div class="alert alert-danger">
+				<div class="alert alert-danger" role="alert">
 
 					<%=request.getAttribute("error")%>
 
@@ -99,7 +173,12 @@ Category category = (Category) request.getAttribute("category");
 				%>
 
 
+				<!-- ================= FORM CARD ================= -->
+
 				<div class="card form-card">
+
+
+					<!-- HEADER -->
 
 					<div class="card-header">
 
@@ -114,15 +193,19 @@ Category category = (Category) request.getAttribute("category");
 					</div>
 
 
+					<!-- BODY -->
+
 					<div class="card-body">
 
 
+						<!-- ================= FORM ================= -->
+
 						<form method="post"
 							action="${pageContext.request.contextPath}/admin/category/update"
-							enctype="multipart/form-data">
+							enctype="multipart/form-data" class="needs-validation" novalidate>
 
 
-							<!-- ID -->
+							<!-- ================= ID ================= -->
 
 							<div class="form-group">
 
@@ -133,22 +216,28 @@ Category category = (Category) request.getAttribute("category");
 							</div>
 
 
-							<!-- NAME -->
+							<!-- ================= NAME ================= -->
 
 							<div class="form-group">
 
-								<label> Tên danh mục </label> <input type="text" name="cateName"
+								<label for="cateName"> Tên danh mục <span
+									class="required">*</span>
+
+								</label> <input type="text" id="cateName" name="cateName"
 									class="form-control" value="<%=category.getCateName()%>"
 									required>
 
+								<div class="invalid-feedback">Tên danh mục không được để
+									trống.</div>
+
 							</div>
 
-
-							<!-- OLD IMAGE -->
+							<!-- ================= OLD IMAGE ================= -->
 
 							<div class="form-group">
 
 								<label> Icon hiện tại </label>
+
 
 								<div>
 
@@ -175,26 +264,41 @@ Category category = (Category) request.getAttribute("category");
 							</div>
 
 
-							<!-- NEW IMAGE -->
+							<!-- ================= NEW IMAGE ================= -->
 
 							<div class="form-group">
 
-								<label> Chọn icon mới </label> <input type="file" name="icon"
-									class="form-control file-input" accept="image/*"
-									onchange="previewImage(event)"> <img id="preview"
-									class="preview-image" style="display: none;"> <small
-									class="form-hint"> Nếu không chọn ảnh mới, icon hiện
-									tại sẽ được giữ nguyên. </small>
+								<label for="icon"> Chọn icon mới </label> <input type="file"
+									id="icon" name="icon" class="form-control"
+									accept="image/jpeg,image/png,image/gif"
+									onchange="previewImage(event)">
+
+
+								<div class="form-text">Nếu không chọn ảnh mới, icon hiện
+									tại sẽ được giữ nguyên.</div>
+
+
+								<!-- FILE ERROR -->
+
+								<div id="image-error" class="invalid-feedback">Chỉ được
+									chọn file JPG, JPEG, PNG hoặc GIF.</div>
+
+
+								<!-- NEW IMAGE PREVIEW -->
+
+								<img id="preview" class="preview-image" style="display: none;"
+									alt="Icon mới">
 
 							</div>
 
 
-							<!-- BUTTON -->
+							<!-- ================= BUTTON ================= -->
 
-							<div class="form-actions">
+							<div class="form-actions mt-4">
 
 								<button type="submit" class="btn btn-primary">💾 Lưu
 									thay đổi</button>
+
 
 								<a href="${pageContext.request.contextPath}/admin/categories"
 									class="btn btn-secondary"> Hủy </a>
@@ -215,25 +319,171 @@ Category category = (Category) request.getAttribute("category");
 	</div>
 
 
+	<!-- ==================================================
+     JAVASCRIPT
+     ================================================== -->
+
 	<script>
-		function previewImage(event) {
 
-			const file = event.target.files[0];
 
-			const preview = document.getElementById("preview");
+    // =========================
+    // PREVIEW IMAGE
+    // =========================
 
-			if (file) {
+    function previewImage(event) {
 
-				preview.src = URL.createObjectURL(file);
+        const file =
+            event.target.files[0];
 
-				preview.style.display = "block";
+        const preview =
+            document.getElementById("preview");
 
-			} else {
+        const input =
+            document.getElementById("icon");
 
-				preview.style.display = "none";
-			}
-		}
-	</script>
+
+        if (!file) {
+
+            preview.src = "";
+
+            preview.style.display = "none";
+
+            input.classList.remove("is-invalid");
+
+            return;
+
+        }
+
+
+        // =========================
+        // ALLOWED FILE TYPES
+        // =========================
+
+        const allowedTypes = [
+            "image/jpeg",
+            "image/png",
+            "image/gif"
+        ];
+
+
+        // =========================
+        // CHECK FILE TYPE
+        // =========================
+
+        if (!allowedTypes.includes(file.type)) {
+
+            input.classList.add("is-invalid");
+
+            preview.src = "";
+
+            preview.style.display = "none";
+
+            return;
+
+        }
+
+
+        // =========================
+        // FILE VALID
+        // =========================
+
+        input.classList.remove("is-invalid");
+
+
+        // =========================
+        // SHOW PREVIEW
+        // =========================
+
+        preview.src =
+            URL.createObjectURL(file);
+
+        preview.style.display = "block";
+
+    }
+
+
+    // =========================
+    // BOOTSTRAP VALIDATION
+    // =========================
+
+    (() => {
+
+        'use strict';
+
+
+        const forms =
+            document.querySelectorAll('.needs-validation');
+
+
+        Array.from(forms).forEach(form => {
+
+
+            form.addEventListener('submit', event => {
+
+
+                // =========================
+                // CHECK FORM
+                // =========================
+
+                if (!form.checkValidity()) {
+
+                    event.preventDefault();
+
+                    event.stopPropagation();
+
+                }
+
+
+                // =========================
+                // CHECK IMAGE
+                // =========================
+
+                const imageInput =
+                    document.getElementById("icon");
+
+
+                if (imageInput.files.length > 0) {
+
+                    const file =
+                        imageInput.files[0];
+
+
+                    const allowedTypes = [
+                        "image/jpeg",
+                        "image/png",
+                        "image/gif"
+                    ];
+
+
+                    if (!allowedTypes.includes(file.type)) {
+
+                        imageInput.classList.add("is-invalid");
+
+                        event.preventDefault();
+
+                        event.stopPropagation();
+
+                    } else {
+
+                        imageInput.classList.remove("is-invalid");
+
+                    }
+
+                }
+
+
+                form.classList.add('was-validated');
+
+
+            }, false);
+
+        });
+
+
+    })();
+
+</script>
+
 
 </body>
 
