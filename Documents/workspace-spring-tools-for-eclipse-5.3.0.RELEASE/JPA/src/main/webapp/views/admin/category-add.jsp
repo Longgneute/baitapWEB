@@ -4,17 +4,60 @@
 <html lang="vi">
 
 <head>
+
 <meta charset="UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <title>Thêm danh mục - Shopping MVC</title>
 
+<!-- Bootstrap 5 -->
+<link
+	href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
+	rel="stylesheet">
+
 <link rel="stylesheet"
 	href="${pageContext.request.contextPath}/css/style.css">
+
+<style>
+.form-card {
+	max-width: 800px;
+}
+
+.form-group {
+	margin-bottom: 20px;
+}
+
+.form-hint {
+	display: block;
+	margin-top: 6px;
+	color: #6b7280;
+}
+
+.preview-image {
+	width: 150px;
+	height: 150px;
+	object-fit: cover;
+	border-radius: 10px;
+	border: 1px solid #ddd;
+}
+
+.preview-label {
+	font-weight: 600;
+	margin-bottom: 8px;
+}
+
+.required {
+	color: red;
+}
+</style>
+
 </head>
 
 <body>
 
 	<div class="admin-layout">
+
 
 		<!-- ================= SIDEBAR ================= -->
 
@@ -22,7 +65,7 @@
 
 			<div class="sidebar-logo">
 
-				🛒 <span> Shopping MVC </span>
+				🛒 <span>Shopping MVC</span>
 
 			</div>
 
@@ -30,26 +73,30 @@
 
 				<div class="menu-title">QUẢN LÝ</div>
 
-				<!-- Trang chủ -->
+
+				<!-- TRANG CHỦ -->
 
 				<a href="${pageContext.request.contextPath}/admin/home"
-					class="menu-item"> 📊 <span> Trang chủ </span>
+					class="menu-item"> 📊 <span>Trang chủ</span>
 
 				</a>
 
-				<!-- Danh mục -->
+
+				<!-- DANH MỤC -->
 
 				<a href="${pageContext.request.contextPath}/admin/categories"
-					class="menu-item active"> 📁 <span> Danh mục </span>
+					class="menu-item active"> 📁 <span>Danh mục</span>
 
 				</a>
+
 
 				<div class="menu-title">HỆ THỐNG</div>
 
-				<!-- Logout -->
+
+				<!-- LOGOUT -->
 
 				<a href="${pageContext.request.contextPath}/logout"
-					class="menu-item"> 🚪 <span> Đăng xuất </span>
+					class="menu-item"> 🚪 <span>Đăng xuất</span>
 
 				</a>
 
@@ -57,9 +104,11 @@
 
 		</aside>
 
+
 		<!-- ================= MAIN ================= -->
 
 		<main class="main-area">
+
 
 			<!-- TOPBAR -->
 
@@ -77,9 +126,11 @@
 
 			</header>
 
-			<!-- CONTENT -->
+
+			<!-- ================= CONTENT ================= -->
 
 			<section class="content">
+
 
 				<!-- PAGE TITLE -->
 
@@ -93,18 +144,20 @@
 
 					</div>
 
+
 					<a href="${pageContext.request.contextPath}/admin/categories"
 						class="btn btn-secondary"> ← Quay lại </a>
 
 				</div>
 
-				<!-- ERROR -->
+
+				<!-- ================= ERROR ================= -->
 
 				<%
 				if (request.getAttribute("error") != null) {
 				%>
 
-				<div class="alert alert-danger">
+				<div class="alert alert-danger" role="alert">
 
 					<%=request.getAttribute("error")%>
 
@@ -114,9 +167,11 @@
 				}
 				%>
 
-				<!-- FORM CARD -->
+
+				<!-- ================= FORM CARD ================= -->
 
 				<div class="card form-card">
+
 
 					<!-- HEADER -->
 
@@ -132,33 +187,51 @@
 
 					</div>
 
+
 					<!-- BODY -->
 
 					<div class="card-body">
 
+
+						<!-- ================= FORM ================= -->
+
 						<form method="post"
 							action="${pageContext.request.contextPath}/admin/category/insert"
-							enctype="multipart/form-data">
+							enctype="multipart/form-data" class="needs-validation" novalidate>
+
 
 							<!-- ================= NAME ================= -->
 
 							<div class="form-group">
 
-								<label for="cateName"> Tên danh mục </label> <input type="text"
-									id="cateName" name="cateName" class="form-control"
-									placeholder="Ví dụ: Điện thoại" required>
+								<label for="cateName"> Tên danh mục <span
+									class="required">*</span>
+								</label> <input type="text" id="cateName" name="cateName"
+									class="form-control" placeholder="Ví dụ: Điện thoại" required>
+
+								<div id="cateName-error" class="invalid-feedback">Tên danh
+									mục phải từ 2 đến 100 ký tự.</div>
 
 							</div>
+
 
 							<!-- ================= IMAGE ================= -->
 
 							<div class="form-group">
 
 								<label for="icon"> Icon danh mục </label> <input type="file"
-									id="icon" name="icon" class="form-control file-input"
-									accept="image/*" onchange="previewImage(event)"> <small
+									id="icon" name="icon" class="form-control"
+									accept="image/jpeg,image/png,image/gif"
+									onchange="previewImage(event)"> <small
 									class="form-hint"> Chọn ảnh từ máy tính. Định dạng hỗ
 									trợ: JPG, JPEG, PNG, GIF. </small>
+
+
+								<!-- FILE VALIDATION -->
+
+								<div id="image-error" class="invalid-feedback">Chỉ được
+									chọn file JPG, JPEG hoặc PNG/GIF.</div>
+
 
 								<!-- PREVIEW -->
 
@@ -173,6 +246,7 @@
 
 							</div>
 
+
 							<!-- ================= BUTTON ================= -->
 
 							<div class="form-actions">
@@ -180,10 +254,12 @@
 								<button type="submit" class="btn btn-primary">✓ Thêm
 									danh mục</button>
 
+
 								<a href="${pageContext.request.contextPath}/admin/categories"
 									class="btn btn-secondary"> Hủy </a>
 
 							</div>
+
 
 						</form>
 
@@ -197,33 +273,170 @@
 
 	</div>
 
-	<!-- ================= JAVASCRIPT ================= -->
+
+	<!-- ==================================================
+     JAVASCRIPT
+     ================================================== -->
+
 
 	<script>
-		function previewImage(event) {
 
-			const file = event.target.files[0];
 
-			const preview = document.getElementById("preview");
+    // =========================
+    // PREVIEW IMAGE
+    // =========================
 
-			const container = document.getElementById("preview-container");
+    function previewImage(event) {
 
-			if (file) {
+        const file = event.target.files[0];
 
-				preview.src = URL.createObjectURL(file);
+        const preview =
+            document.getElementById("preview");
 
-				container.style.display = "block";
+        const container =
+            document.getElementById("preview-container");
 
-			} else {
+        const input =
+            document.getElementById("icon");
 
-				preview.src = "";
+        const error =
+            document.getElementById("image-error");
 
-				container.style.display = "none";
 
-			}
+        if (!file) {
 
-		}
-	</script>
+            preview.src = "";
+
+            container.style.display = "none";
+
+            input.classList.remove("is-invalid");
+
+            return;
+        }
+
+
+        // =========================
+        // CHECK FILE TYPE
+        // =========================
+
+        const allowedTypes = [
+            "image/jpeg",
+            "image/png",
+            "image/gif"
+        ];
+
+
+        if (!allowedTypes.includes(file.type)) {
+
+            input.classList.add("is-invalid");
+
+            preview.src = "";
+
+            container.style.display = "none";
+
+            return;
+        }
+
+
+        // FILE HỢP LỆ
+
+        input.classList.remove("is-invalid");
+
+
+        // =========================
+        // SHOW PREVIEW
+        // =========================
+
+        preview.src =
+            URL.createObjectURL(file);
+
+        container.style.display = "block";
+
+    }
+
+
+    // =========================
+    // BOOTSTRAP FORM VALIDATION
+    // =========================
+
+    (() => {
+
+        'use strict';
+
+
+        const forms =
+            document.querySelectorAll('.needs-validation');
+
+
+        Array.from(forms).forEach(form => {
+
+
+            form.addEventListener('submit', event => {
+
+
+                const imageInput =
+                    document.getElementById("icon");
+
+
+                // =========================
+                // CHECK IMAGE
+                // =========================
+
+                if (imageInput.files.length > 0) {
+
+                    const file =
+                        imageInput.files[0];
+
+
+                    const allowedTypes = [
+                        "image/jpeg",
+                        "image/png",
+                        "image/gif"
+                    ];
+
+
+                    if (!allowedTypes.includes(file.type)) {
+
+                        imageInput.classList.add("is-invalid");
+
+                        event.preventDefault();
+
+                        event.stopPropagation();
+
+                    } else {
+
+                        imageInput.classList.remove("is-invalid");
+
+                    }
+
+                }
+
+
+                // =========================
+                // CHECK FORM
+                // =========================
+
+                if (!form.checkValidity()) {
+
+                    event.preventDefault();
+
+                    event.stopPropagation();
+
+                }
+
+
+                form.classList.add('was-validated');
+
+
+            }, false);
+
+        });
+
+
+    })();
+
+</script>
+
 
 </body>
 

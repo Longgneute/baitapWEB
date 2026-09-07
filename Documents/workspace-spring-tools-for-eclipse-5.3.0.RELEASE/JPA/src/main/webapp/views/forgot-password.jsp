@@ -14,6 +14,36 @@
 
 </head>
 
+<script>
+
+(() => {
+
+    'use strict';
+
+    const forms =
+        document.querySelectorAll('.needs-validation');
+
+    Array.from(forms).forEach(form => {
+
+        form.addEventListener('submit', event => {
+
+            if (!form.checkValidity()) {
+
+                event.preventDefault();
+                event.stopPropagation();
+
+            }
+
+            form.classList.add('was-validated');
+
+        }, false);
+
+    });
+
+})();
+
+</script>
+
 <body>
 
 	<div class="auth-page">
@@ -48,21 +78,22 @@
 
 			<!-- FORM -->
 			<form method="post"
-				action="${pageContext.request.contextPath}/forgot-password">
+				action="${pageContext.request.contextPath}/forgot-password"
+				class="needs-validation" novalidate>
 
 				<div class="form-group">
 
-					<label for="email">Email</label> <input type="email" id="email"
-						name="email" class="form-control"
+					<label for="email"> Email <span class="required">*</span>
+					</label> <input type="email" id="email" name="email" class="form-control"
 						placeholder="Nhập email đã đăng ký"
 						value="<%=request.getParameter("email") != null ? request.getParameter("email") : ""%>"
-						required>
+						maxlength="100" required>
+
+					<div class="invalid-feedback">Vui lòng nhập email hợp lệ.</div>
 
 				</div>
 
-
 				<button type="submit" class="btn btn-primary btn-block">
-
 					Gửi OTP</button>
 
 			</form>
